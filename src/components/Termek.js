@@ -1,9 +1,14 @@
 import React, { useContext } from 'react'
-import { ApiContext } from '../contexts/ApiContext'
+import { kosarContext } from '../contexts/KosarContext';
 
 function Termek(props) {
-    console.log(props);
+    const {kosarbaKattintas} = useContext(kosarContext);
     
+    function kosarbaHelyezes(){
+        kosarbaKattintas(props)
+    }
+    
+  
     /*létre kell hozni egy terméket bootstrap card */
    
   return (
@@ -17,7 +22,7 @@ function Termek(props) {
                 </div>
                 <div className="card-footer">
                     <h3>Ár: {props.termek.price} Ft</h3>
-                    <button className='btn btn-dark'>Kattintas</button>
+                    <button className='btn btn-dark' onClick={()=>{kosarbaHelyezes()}}>Kattintas</button>
                 </div> 
             </div>
     </div>

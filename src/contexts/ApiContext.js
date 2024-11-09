@@ -20,7 +20,7 @@ export const ApiProvider=({children})=>{
         try {
           const response = await myAxios.get(vegpont); //az alapértelmezett baseURL-ben megadott végpontot kiegészítjük a /products-szal
           setTermekLista(response.data)  
-          console.log(response.data);
+          
           
           //beállítjuk az apiData statet a beállítófüggvényével.
         } catch (err) {

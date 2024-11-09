@@ -1,23 +1,27 @@
-import { createContext, useState } from "react";
+import { createContext, useContext, useState } from "react";
+import { ApiContext } from "./ApiContext";
 
-export const kosarContext = createContext("");  
+export const kosarContext = createContext("");
+
+
 export const KosarProvider = ({ children }) => {
 
-    const[kosar, setKosar] = useState([])
+
+    const [kosarLista, setKosarLista] = useState([])
     
-    function kosarba(termek){
-        const segedKosar = [...kosar];
-        segedKosar.push(termek)
+
+    function kosarbaKattintas(props) {
+       const segedKosar = [...kosarLista]
+       segedKosar.push(props)
+       setKosarLista(segedKosar)
+
     }
 
-
+    return <kosarContext.Provider value={{ kosarLista, kosarbaKattintas }}>
+        {children}
+    </kosarContext.Provider>
 }
 
 
 
 
-return(
-    <kosarContext.Provider value={kosar}>
-        {children}
-    </kosarContext.Provider>
-)
