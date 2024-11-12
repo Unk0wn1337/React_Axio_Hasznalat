@@ -1,45 +1,39 @@
-// 1. createContext
-// 2. provider
-// 2.3 Provider és a Context összekötése
-// 4. Körbeölelgetés
-// Felhasználás és a komponensekenbe
-
-
 import { createContext, useEffect, useState } from "react";
 import { myAxios } from "./MyAxios";
 
+export const ApiContext = createContext("");
 
-export const ApiContext =  createContext("")
+export const ApiProvider = ({ children }) => {
+  const [termekLista, setTermekLista] = useState([]);
+  const [kategoriaLista, setKategoriaLista] = useState([]);
 
-export const ApiProvider=({children})=>{
-    const [termekLista, setTermekLista] = useState([])
-    const vegpont="https://fakestoreapi.com"
 
-    const getAdat = async (vegpont) => {
-        // saját axios példányt használjuk
-        try {
-          const response = await myAxios.get(vegpont); //az alapértelmezett baseURL-ben megadott végpontot kiegészítjük a /products-szal
-          setTermekLista(response.data)  
-          
-          
-          //beállítjuk az apiData statet a beállítófüggvényével.
-        } catch (err) {
-          console.log("Hiba történt az adatok lekérésekor.");
-        } finally {
-          
-        }
-      };
+  const getAdat = async (vegpont,fv) => {
+    try {
+      const response = await myAxios.get(vegpont); // Adatok lekérése
+      fv(response.data);
+    } catch (err) {
+      console.log("Hiba történt az adatok lekérésekor.");
+    }
+  };
 
-      //asszinkron híváso kezelése az useEffekt hook
-      useEffect(() => {
-        getAdat("/products");
-      }, []);
+  const postAdat = async (vegpont, adat) => {
+    try {
+      const response = await myAxios.post(vegpont, adat); // Adatok küldése
+      console.log(response);
+    } catch (err) {
+      console.log("Hiba történt az adatok küldésekor.");
+    }
+  };
 
-    
+  useEffect(() => {
+    getAdat("/products",setTermekLista);
+    getAdat("/products/categories",setKategoriaLista)
+  }, []);
 
-    return (
-        <ApiContext.Provider value={{termekLista }}>
-          {children}
-        </ApiContext.Provider>
-      );
-}
+  return (
+    <ApiContext.Provider value={{ termekLista, postAdat, getAdat, kategoriaLista }}>
+      {children}
+    </ApiContext.Provider>
+  );
+};
